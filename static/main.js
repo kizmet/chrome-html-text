@@ -5,9 +5,8 @@
   angular.module('WordcountApp', [])
 
   .controller('WordcountController', ['$scope', '$log', '$http', '$timeout',
-
-
     function($scope, $log, $http, $timeout) {
+
       $scope.submitButtonText = 'Submit';
       $scope.loading = false;
       $scope.urlerror = false;
@@ -27,7 +26,7 @@
           $scope.wordcounts = null;
           $scope.loading = true;
           $scope.submitButtonText = 'Loading...';
-
+          $scope.urlerror = false;
         }).
         error(function(error) {
           $log.log(error);
@@ -47,7 +46,6 @@
               $log.log(data, status);
             } else if (status === 200){
               $log.log(data);
-              $scope.urlerror = false;
               $scope.loading = false;
               $scope.submitButtonText = "Submit";
               $scope.wordcounts = data;
@@ -65,11 +63,40 @@
             $scope.urlerror = true;
           });
         };
+
       poller();
+
     }
 
-  }
-  ]);
+  }])
 
+  .directive('wordCountChart', ['$parse', function ($parse) {
+  return {
+    restrict: 'E',
+    replace: true,
+    template: '<div id="chart"></div>',
+link: function (scope) {
+  scope.$watch('wordcounts', function() {
+    d3.select('#chart').selectAll('*').remove();
+    var data = scope.wordcounts;
+    for (var word in data) {
+      d3.select('#chart')
+        .append('div')
+        .selectAll('div')
+        .data(word[0])
+        .enter()
+        .append('div')
+        .style('width', function() {
+          return (data[word] * 20) + 'px';
+        })
+        .text(function(d){
+          return word;
+        });
+    }
+  }, true);
+ }
+};
+}]);
+  
 }());
 
