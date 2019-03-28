@@ -12,7 +12,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from stop_words import stops
 from collections import Counter
 from bs4 import BeautifulSoup
-
+import html5lib
+import lxml
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -23,11 +24,12 @@ q = Queue(connection=conn)
 
 from models import *
 
+from scraper import *
 
 def count_and_save_words(url):
 
     errors = []
-
+    """
     try:
         r = requests.get(url)
     except:
@@ -37,7 +39,8 @@ def count_and_save_words(url):
         return {"error": errors}
 
     # text processing
-    raw = BeautifulSoup(r.text, 'html.parser').get_text()
+    # raw = BeautifulSoup(r.text, 'html.parser').get_text()
+    raw = BeautifulSoup(r.text, 'lxml').get_text()
     nltk.data.path.append('./nltk_data/')  # set the path
     tokens = nltk.word_tokenize(raw)
     text = nltk.Text(tokens)
@@ -50,13 +53,25 @@ def count_and_save_words(url):
     # stop words
     no_stop_words = [w for w in raw_words if w.lower() not in stops]
     no_stop_words_count = Counter(no_stop_words)
+    """
+    try:
+        mydata = Scraper(url)
+        raw_word_counter = mydata.raw_word_count
+        no_stop_words_counter = mydata.no_ignored_words_count
+    except:
+        errors.append(
+            "Unable to get text from URL. Make sure it's valid and try again."
+            )
+        return {"error": errors}
 
     # save the results
     try:
         result = Result(
             url=url,
-            result_all=raw_word_count,
-            result_no_stop_words=no_stop_words_count
+            result_all=raw_word_counter,
+            result_no_stop_words=no_stop_words_counter
+            # result_all=raw_word_count,
+            # result_no_stop_words=no_stop_words_count
         )
         db.session.add(result)
         db.session.commit()
@@ -97,7 +112,7 @@ def get_results(job_key):
             result.result_no_stop_words.items(),
             key=operator.itemgetter(1),
             reverse=True
-        )[:10]
+        )[:20]
         return jsonify(results)
     else:
         return "Computing...", 202
