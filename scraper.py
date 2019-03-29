@@ -37,8 +37,8 @@ class Scraper():
       self.get_words()
 
   def get_words(self):
-      #nltk.data.path.append('./nltk_data/')  # set the path
-      nltk.data.path.append('/Users/bryant/Code/flask-by-example/nltk_data/')
+      nltk.data.path.append('./nltk_data/')  # set the path
+      #nltk.data.path.append('/Users/bryant/Code/flask-by-example/nltk_data/')
       self.tokens = nltk.word_tokenize(self.raw)
       self.text = nltk.Text(self.tokens)
       nonPunct = re.compile('.*[A-Za-z].*')
