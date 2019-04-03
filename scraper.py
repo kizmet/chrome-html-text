@@ -49,6 +49,7 @@ class Scraper():
       ignored_words = stopwords.words('english')
       # self.no_ignored_words = [w for w in self.raw_words if w.lower()  not in ignored_words]
       self.no_ignored_words = [w for w in self.raw_words if w.lower()  not in stops and w.lower()  not in ignored_words]
+      self.no_ignored_words_count = Counter(self.no_ignored_words)
       self.items = self.no_ignored_words_count.items()
 
   def print_tags(self):
