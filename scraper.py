@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from time import sleep
+from stop_words import stops
 #/app/.apt/usr/bin/google-chrome
 
 class Scraper():
@@ -46,8 +47,8 @@ class Scraper():
       self.raw_words = [w for w in self.text if nonPunct.match(w)]
       self.raw_word_count = Counter(self.raw_words)
       ignored_words = stopwords.words('english')
-      self.no_ignored_words = [w for w in self.raw_words if w.lower()  not in ignored_words]
-      self.no_ignored_words_count = Counter(self.no_ignored_words)
+      # self.no_ignored_words = [w for w in self.raw_words if w.lower()  not in ignored_words]
+      self.no_ignored_words = [w for w in self.raw_words if w.lower()  not in stops and w.lower()  not in ignored_words]
       self.items = self.no_ignored_words_count.items()
 
   def print_tags(self):
