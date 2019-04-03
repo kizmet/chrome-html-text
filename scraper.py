@@ -1,4 +1,3 @@
-import requests
 import re
 import nltk
 from nltk.text import Text
@@ -8,7 +7,7 @@ from bs4 import BeautifulSoup, Comment
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
-
+from time import sleep
 #/app/.apt/usr/bin/google-chrome
 
 class Scraper():
@@ -18,6 +17,7 @@ class Scraper():
     opts.set_headless()
     self.driver = Chrome(options=opts)
     self.driver.get(url)
+    sleep(5)
     self.r = self.driver.page_source
     self.driver.close()
     self.get_soup()

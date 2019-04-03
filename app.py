@@ -112,7 +112,7 @@ def get_results(job_key):
             result.result_no_stop_words.items(),
             key=operator.itemgetter(1),
             reverse=True
-        )[:20]
+        )[:50]
         return jsonify(results)
     else:
         return "Computing...", 202
