@@ -10,7 +10,7 @@ from worker import conn
 from flask import Flask, render_template, request, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from stop_words import stops
-from collections import Counter
+from collections import Counter, OrderedDict
 from bs4 import BeautifulSoup
 import html5lib
 import lxml
@@ -108,14 +108,19 @@ def get_results(job_key):
 
     if job.is_finished:
         result = Result.query.filter_by(id=job.result).first()
-        results = sorted(
+#        results = sorted(
+#            result.result_no_stop_words.items(),
+#            key=operator.itemgetter(1),
+#            reverse=True
+#        )[:50]
+        results = OrderedDict(sorted(
             result.result_no_stop_words.items(),
-            key=operator.itemgetter(1),
-            reverse=True
-        )[:50]
+            key=lambda t: t[1])
+        )
         return jsonify(results)
     else:
         return "Computing...", 202
+
 
 
 if __name__ == '__main__':
