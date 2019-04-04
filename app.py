@@ -113,11 +113,11 @@ def get_results(job_key):
 #            key=operator.itemgetter(1),
 #            reverse=True
 #        )[:50]
-        results = OrderedDict(sorted(
+        results = sorted(
             result.result_no_stop_words.items(),
             key=lambda t: t[1],
-            reverse=True)
-        )
+            reverse=True
+        )[:40]
         return jsonify(results)
     else:
         return "Computing...", 202
