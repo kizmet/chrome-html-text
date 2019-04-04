@@ -115,8 +115,8 @@ def get_results(job_key):
 #        )[:50]
         results = OrderedDict(sorted(
             result.result_no_stop_words.items(),
-            key=lambda t: t[1]),
-            reverse=True
+            key=lambda t: t[1],
+            reverse=True)
         )
         return jsonify(results)
     else:
