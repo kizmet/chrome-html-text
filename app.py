@@ -118,7 +118,7 @@ def get_results(job_key):
 #            key=lambda t: t[1],
 #            reverse=True
 #        )[:40]
-         results = result.result_no_stop_words.most_common(40)
+        results = result.result_no_stop_words.most_common(40)
         return jsonify(results)
     else:
         return "Computing...", 202
