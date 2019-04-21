@@ -9,7 +9,6 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 from time import sleep
 from stop_words import stops
-#/app/.apt/usr/bin/google-chrome
 
 class Scraper():
   def __init__(self, url):
@@ -39,8 +38,7 @@ class Scraper():
       self.get_words()
 
   def get_words(self):
-      nltk.data.path.append('./nltk_data/')  # set the path
-      #nltk.data.path.append('/Users/bryant/Code/flask-by-example/nltk_data/')
+      nltk.data.path.append('./nltk_data/') 
       self.tokens = nltk.word_tokenize(self.raw)
       self.text = nltk.Text(self.tokens)
       nonPunct = re.compile('.*[A-Za-z].*')
